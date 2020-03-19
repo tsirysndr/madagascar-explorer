@@ -9,6 +9,9 @@ export const Fokontany = objectType({
     t.string('name', { nullable: true })
     t.string('province', { nullable: true })
     t.string('code', { nullable: true })
+    t.string('commune', { nullable: true })
+    t.string('district', { nullable: true })
+    t.string('region', { nullable: true })
     t.field('geometry', { type: Polygon, nullable: true })
   }
 })

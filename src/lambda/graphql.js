@@ -2,29 +2,40 @@ import { ApolloServer } from 'apollo-server-lambda';
 import { downloadJSON } from './loader';
 import schema from './schema';
 
-let country = {};
 let regions = [];
 let communes = [];
 let districts = [];
 let fokontany = [];
 
+let regionsIndex = [];
+let communesIndex = [];
+let districtsIndex = [];
+let fokontanyIndex = [];
+
 downloadJSON().then((result) => {
-  country = result.country;
   regions = result.regions;
   districts = result.districts;
   communes = result.communes;
   fokontany = result.fokontany;
-});
+  regionsIndex = result.regionsIndex;
+  districtsIndex = result.districtsIndex;
+  communesIndex = result.communesIndex;
+  fokontanyIndex = result.fokontanyIndex;
+})
+.catch(err => console.log(err));
 
 const server = new ApolloServer({
   schema,
   context: () => {
     return {
-      country,
       regions,
       districts,
       communes,
-      fokontany
+      fokontany,
+      regionsIndex,
+      districtsIndex,
+      communesIndex,
+      fokontanyIndex
     }
   }
 });
