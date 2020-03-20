@@ -1,12 +1,19 @@
-import { find, sort } from '../../repo';
 
-const baseURL = 'https://gitlab.com/tsiry.sndr/mg-geojson/-/raw/master/assets/communes';
+import { query as q } from 'faunadb';
+import { formatCommunes } from '../../formater';
 
 export const Commune = {
   commune: (parent, { id }, context) => {
-    return find(id, context.communesIndex, baseURL);
+    return {};
   },
-  communes: (parent, args, context) => {
-    return sort(context.communes);
+  communes: async (parent, args, context) => {
+    const { data } = await context.client.query(
+      q.Paginate(
+        q.Match(q.Index('paginate_communes')),
+        { size: 10 }
+      ) 
+    );
+    const result = await context.client.query(data.map(ref => q.Get(ref)))
+    return formatCommunes(result);
   }
 }

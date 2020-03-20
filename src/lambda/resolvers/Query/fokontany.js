@@ -1,12 +1,18 @@
-import { find, sort } from '../../repo';
-
-const baseURL = 'https://gitlab.com/tsiry.sndr/mg-geojson/-/raw/master/assets/fokontany';
+import { query as q } from 'faunadb';
+import { formatFokontany } from '../../formater';
 
 export const Fokontany = {
   fokontany: (parent, { id }, context) => {
-    return find(id, context.fokontanyIndex, baseURL);
+    return {};
   },
-  allFokontany: (parent, args, context) => {
-    return sort(context.fokontany);
+  allFokontany: async (parent, args, context) => {
+    const { data } = await context.client.query(
+      q.Paginate(
+        q.Match(q.Index('paginate_fokontany')),
+        { size: 10 }
+      ) 
+    );
+    const result = await context.client.query(data.map(ref => q.Get(ref)))
+    return formatFokontany(result);
   }
 }

@@ -1,12 +1,17 @@
-import { find, sort } from '../../repo';
-
-const baseURL = 'https://gitlab.com/tsiry.sndr/mg-geojson/-/raw/master/assets/regions';
+import { query as q } from 'faunadb';
+import { formatRegions } from '../../formater';
 
 export const Region = {
   region: (parent, { id }, context) => {
-    return find(id, context.regionsIndex, baseURL);
+    return {};
   },
-  regions: (parent, args, context) => {
-    return sort(context.regions);
+  regions: async (parent, args, context) => {
+    const { data } = await context.client.query(
+      q.Paginate(
+        q.Match(q.Index('paginate_regions')),
+      ) 
+    );
+    const result = await context.client.query(data.map(ref => q.Get(ref)))
+    return formatRegions(result);
   }
 }
