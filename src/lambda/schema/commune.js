@@ -1,4 +1,4 @@
-import { objectType, extendType, stringArg } from 'nexus';
+import { objectType, extendType, stringArg, intArg } from 'nexus';
 import { Polygon } from './geometry';
 import resolvers from '../resolvers';
 
@@ -27,6 +27,10 @@ export const CommuneQuery = extendType({
       resolve: resolvers.Query.commune, 
     })
     t.list.field('communes', { 
+      args: {
+        skip: intArg({ required: false }),
+        limit: intArg({ required: false })
+      },
       type: Commune, 
       nullable: true,
       resolve: resolvers.Query.communes, 

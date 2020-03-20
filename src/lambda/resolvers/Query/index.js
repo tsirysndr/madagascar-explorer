@@ -3,6 +3,7 @@ import { Country } from './country';
 import { District } from './district';
 import { Fokontany } from './fokontany';
 import { Region } from './region';
+import { Search } from './search';
 
 export const Query = {
   ...Commune,
@@ -10,4 +11,5 @@ export const Query = {
   ...District,
   ...Fokontany,
   ...Region,
+  ...Search,
 }

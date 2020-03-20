@@ -6,6 +6,7 @@ import { District, DistrictQuery } from './district';
 import { Fokontany, FokontanyQuery } from './fokontany';
 import { Polygon, MultiPolygon } from './geometry';
 import { Region, RegionQuery } from './region';
+import { Results, SearchQuery } from './search';
 
 export default makeSchema({
   types: [
@@ -22,5 +23,7 @@ export default makeSchema({
     MultiPolygon,
     Region,
     RegionQuery,
+    SearchQuery,
+    Results,
   ],
 });

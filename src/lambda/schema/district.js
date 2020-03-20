@@ -1,4 +1,4 @@
-import { objectType, extendType, stringArg } from 'nexus';
+import { objectType, extendType, stringArg, intArg } from 'nexus';
 import { Polygon } from './geometry';
 import resolvers from '../resolvers';
 
@@ -26,6 +26,10 @@ export const DistrictQuery = extendType({
       resolve: resolvers.Query.district 
     })
     t.list.field('districts', { 
+      args: {
+        skip: intArg({ required: false }),
+        limit: intArg({ required: false })
+      },
       type: District, 
       nullable: true,
       resolve: resolvers.Query.districts

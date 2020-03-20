@@ -1,4 +1,4 @@
-import { objectType, extendType, stringArg } from 'nexus';
+import { objectType, extendType, stringArg, intArg } from 'nexus';
 import { Polygon } from './geometry';
 import resolvers from '../resolvers';
 
@@ -24,7 +24,11 @@ export const RegionQuery = extendType({
       nullable: true,
       resolve: resolvers.Query.region, 
     })
-    t.list.field('regions', { 
+    t.list.field('regions', {
+      args: {
+        skip: intArg({ required: false }),
+        limit: intArg({ required: false })
+      },
       type: Region, 
       nullable: true,
       resolve: resolvers.Query.regions,

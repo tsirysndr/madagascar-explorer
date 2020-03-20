@@ -1,4 +1,4 @@
-import { objectType, extendType, stringArg } from 'nexus';
+import { objectType, extendType, stringArg, intArg } from 'nexus';
 import { Polygon } from './geometry';
 import resolvers from '../resolvers';
 
@@ -28,6 +28,10 @@ export const FokontanyQuery = extendType({
       resolve: resolvers.Query.fokontany, 
     })
     t.list.field('allFokontany', { 
+      args: {
+        skip: intArg({ required: false }),
+        limit: intArg({ required: false })
+      },
       type: Fokontany, 
       nullable: true ,
       resolve: resolvers.Query.allFokontany,
