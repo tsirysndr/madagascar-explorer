@@ -9,6 +9,7 @@ export const Region = {
     const { data } = await context.client.query(
       q.Paginate(
         q.Match(q.Index('paginate_regions')),
+        { size: 5 },
       ) 
     );
     const result = await context.client.query(data.map(ref => q.Get(ref)))

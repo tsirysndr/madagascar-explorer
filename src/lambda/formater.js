@@ -1,15 +1,17 @@
 
+export const formatRegion = (item) => ({
+  id: item.ref.value.id,
+  name: item.data.Name,
+  code: item.data.Code,
+  province: item.data.Province,
+  geometry: {
+    type: item.data.Geometry.Type,
+    cooridnates: item.data.Geometry.Coordinates
+  }
+})
+
 export const formatRegions = (result) => (
-  result.map(item => ({ 
-    id: item.ref.value.id,
-    name: item.data.Name,
-    code: item.data.Code,
-    province: item.data.Province,
-    geometry: {
-      type: item.data.Geometry.Type,
-      cooridnates: item.data.Geometry.Coordinates
-    }
-  }))
+  result.map(item => formatRegion(item))
 );
 
 export const formatDistricts = (result) => (
