@@ -3,19 +3,23 @@ import { query as q } from 'faunadb';
 import { formatCommunes, formatFokontany, formatDistricts, formatRegions } from './formater';
 
 export const search = async (context, keyword) => {
+  const size = keyword === '' ? 100 : 50000
   const _fokontany = await context.client.query(
     q.Paginate(
       q.Match(q.Index('all_fokontany')),
+      { size }
     ) 
   );
   const _communes = await context.client.query(
     q.Paginate(
       q.Match(q.Index('all_communes')),
+      { size }
     ) 
   );
   const _districts = await context.client.query(
     q.Paginate(
       q.Match(q.Index('all_districts')),
+      { size }
     ) 
   );
   const _regions = await context.client.query(

@@ -1,5 +1,5 @@
-import { objectType, extendType, stringArg, intArg } from 'nexus';
-import { Polygon } from './geometry';
+import { objectType, extendType, intArg, idArg } from 'nexus';
+import { Geometry } from './geometry';
 import resolvers from '../resolvers';
 
 export const Fokontany = objectType({
@@ -12,7 +12,7 @@ export const Fokontany = objectType({
     t.string('commune', { nullable: true })
     t.string('district', { nullable: true })
     t.string('region', { nullable: true })
-    t.field('geometry', { type: Polygon, nullable: true })
+    t.field('geometry', { type: Geometry, nullable: true })
   }
 })
 
@@ -21,7 +21,7 @@ export const FokontanyQuery = extendType({
   definition(t) {
     t.field('fokontany', { 
       args: { 
-        id: stringArg({ required: true })
+        id: idArg({ required: true })
       }, 
       type: Fokontany, 
       nullable: true,
@@ -35,6 +35,10 @@ export const FokontanyQuery = extendType({
       type: Fokontany, 
       nullable: true ,
       resolve: resolvers.Query.allFokontany,
+    })
+    t.int('countFokontany', { 
+      nullable: true,
+      resolve: resolvers.Query.countFokontany
     })
   }
 })

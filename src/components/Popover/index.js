@@ -3,6 +3,7 @@ import { useQuery } from '@apollo/react-hooks'
 import { gql } from 'apollo-boost'
 import { Tag } from 'antd'
 import MDSpinner from 'react-md-spinner'
+import PopoverList from './PopoverList'
 
 const SEARCH = gql`
   query Search($keyword: String!) {
@@ -34,6 +35,10 @@ const SEARCH = gql`
         code
       }
     }
+    countRegions
+    countDistricts
+    countCommunes
+    countFokontany
   }
 `
 
@@ -41,6 +46,9 @@ const Popover = (props) => {
   const [filter, setFilter] = useState(1)
   const [keyword, setKeyword] = useState('')
   const { loading, error, data } = useQuery(SEARCH, { variables: { keyword }})
+  const handleUpdate = () => {
+    console.log('load more ...')
+  }
   return (
     <div id="search-popover" className={props.popoverClass}>
       <div style={{ display: 'flex', height: 64 }} onClick={() => props.setExpanded(true) }>
@@ -74,82 +82,34 @@ const Popover = (props) => {
       {
         !loading && !error && (
           <div style={{ padding: 10 }}>
-            <Tag color="cyan" className={`tag ${filter !== 1 ? 'inactive' : ''}`} onClick={() => setFilter(1)}>Regions ({data.search.regions.length})</Tag>
-            <Tag color="cyan" className={`tag ${filter !== 2 ? 'inactive' : ''}`} onClick={() => setFilter(2)}>Districts ({data.search.districts.length})</Tag>
-            <Tag color="cyan" className={`tag ${filter !== 3 ? 'inactive' : ''}`} onClick={() => setFilter(3)}>Communes ({data.search.communes.length})</Tag>
-            <Tag color="cyan" className={`tag ${filter !== 4 ? 'inactive' : ''}`} onClick={() => setFilter(4)}>Fokontany ({data.search.fokontany.length})</Tag>
+            <Tag color="cyan" 
+                 className={`tag ${filter !== 1 ? 'inactive' : ''}`} 
+                 onClick={() => setFilter(1)}
+            >
+              Regions ({keyword === '' ? data.countRegions : data.search.regions.length})
+            </Tag>
+            <Tag color="cyan" 
+                 className={`tag ${filter !== 2 ? 'inactive' : ''}`} 
+                 onClick={() => setFilter(2)}
+            >
+              Districts ({ keyword === '' ? data.countDistricts : data.search.districts.length})
+            </Tag>
+            <Tag color="cyan" 
+                 className={`tag ${filter !== 3 ? 'inactive' : ''}`} 
+                 onClick={() => setFilter(3)}
+            >
+              Communes ({keyword === '' ? data.countCommunes : data.search.communes.length})
+            </Tag>
+            <Tag color="cyan" 
+                 className={`tag ${filter !== 4 ? 'inactive' : ''}`} 
+                 onClick={() => setFilter(4)}
+            >
+              Fokontany ({keyword === '' ? data.countFokontany : data.search.fokontany.length})
+            </Tag>
           </div>
         )
       }
-      {
-        filter === 1 && !loading && !error && (
-          <ul className='popover-list'>
-            <li>
-              {
-                data.search.regions.map((item, index) => (
-                  <a href='/#' className='item' key={index}>
-                    {item.name}
-                  </a> 
-                ))
-              }
-            </li>
-          </ul>
-        )
-      }
-      {
-        filter === 2 && !loading && !error && (
-          <ul className='popover-list'>
-            <li>
-              {
-                data.search.districts.map((item, index) => (
-                  <div className='item' key={index}>
-                    <a href='/#'>
-                      {item.name}
-                    </a>
-                    <div>{item.region}</div>
-                  </div>
-                ))
-              }
-            </li>
-          </ul>
-        )
-      }
-      {
-        filter === 3 && !loading && !error && (
-          <ul className='popover-list'>
-            <li>
-              {
-                data.search.communes.map((item, index) => (
-                  <div className='item' key={index}>
-                    <a href='/#'>
-                      {item.name}
-                    </a> 
-                    <div>{item.district} &middot; {item.region}</div> 
-                  </div>
-                ))
-              }
-            </li>
-          </ul>
-        )
-      }
-      {
-        filter === 4 && !loading && !error && (
-          <ul className='popover-list'>
-            <li>
-              {
-                data.search.fokontany.map((item, index) => (
-                  <div className='item' key={index}>
-                    <a href='/#'>
-                      {item.name}
-                    </a>
-                    <div>{item.commune} &middot; {item.district} &middot; {item.region}</div> 
-                  </div>
-                ))
-              }
-            </li>
-          </ul>
-        )
-      }
+      <PopoverList {...{ filter, data, error, handleUpdate, loading }} />
     </div>
   )
 }

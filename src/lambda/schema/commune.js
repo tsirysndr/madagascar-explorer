@@ -1,5 +1,5 @@
-import { objectType, extendType, stringArg, intArg } from 'nexus';
-import { Polygon } from './geometry';
+import { objectType, extendType, intArg, idArg } from 'nexus';
+import { Geometry } from './geometry';
 import resolvers from '../resolvers';
 
 export const Commune = objectType({
@@ -11,7 +11,7 @@ export const Commune = objectType({
     t.string('code', { nullable: true })
     t.string('district', { nullable: true })
     t.string('region', { nullable: true })
-    t.field('geometry', { type: Polygon, nullable: true })
+    t.field('geometry', { type: Geometry, nullable: true })
   }
 })
 
@@ -20,7 +20,7 @@ export const CommuneQuery = extendType({
   definition(t) {
     t.field('commune', { 
       args: { 
-        id: stringArg({ required: true })
+        id: idArg({ required: true })
       }, 
       type: Commune, 
       nullable: true,
@@ -34,6 +34,10 @@ export const CommuneQuery = extendType({
       type: Commune, 
       nullable: true,
       resolve: resolvers.Query.communes, 
+    })
+    t.int('countCommunes', { 
+      nullable: true,
+      resolve: resolvers.Query.countCommunes
     })
   }
 })

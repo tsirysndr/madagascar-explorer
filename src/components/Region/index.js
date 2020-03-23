@@ -6,15 +6,13 @@ import Popover from '../Popover';
 import { useQuery } from '@apollo/react-hooks';
 import { gql } from 'apollo-boost'
 
-const FOKONTANY = gql`
-  query Fokontany($id: ID!) {
-    fokontany(id: $id) {
+const REGION = gql`
+  query Region($id: ID!) {
+    region(id: $id) {
       id
+      name
       code
-      commune
       province
-      district
-      region
       geometry {
         type
         polygon {
@@ -37,10 +35,9 @@ const MAPBOX_STYLE = process.env.REACT_APP_MAP_STYLE;
 // Data to be used by the LineLayer
 const data = [{sourcePosition: [-122.41669, 37.7853], targetPosition: [-122.41669, 37.781]}];
 
-const Fokontany = (props) => {
+const Region = (props) => {
     const { id } = props.match.params
-    const { loading, error, data } = useQuery(FOKONTANY, { variables: { id }})
-    console.log(loading, error, data)
+    const { loading, error, data } = useQuery(REGION, { variables: { id }})
     const [layers, setLayers] = useState([]);
     const [expanded, setExpanded] = useState(false)
     const popoverClass = `popover ${expanded ? 'expand' : 'shrink'}`
@@ -54,14 +51,14 @@ const Fokontany = (props) => {
 
     useEffect(() => {
       if (!loading && !error) {
-        const { geometry } = data.fokontany
+        const { geometry } = data.region
         const { type } = geometry
         const [ longitude, latitude ] = type === 'Polygon' ? geometry.polygon.coordinates[0][0] : geometry.multipolygon.coordinates[0][0][0] 
         const location = {
           ...viewport,
           longitude,
           latitude,
-          zoom: 13,
+          zoom: 6,
         }
         setViewport(location)
         const geojson = {
@@ -84,11 +81,12 @@ const Fokontany = (props) => {
             lineWidthScale: 20,
             lineWidthMinPixels: 2,
             getElevation: 1,
-            getFillColor: [235, 47, 150, 127],
+            getFillColor: [82, 196, 26, 127],
           })
         ])
       }
     }, [loading, error, data])
+
 
     return (
       <div>
@@ -114,4 +112,4 @@ const Fokontany = (props) => {
     )
 }
 
-export default Fokontany
+export default Region

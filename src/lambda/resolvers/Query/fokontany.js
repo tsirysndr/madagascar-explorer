@@ -1,5 +1,6 @@
 import { query as q } from 'faunadb';
 import { formatFokontany } from '../../formater';
+import lowercasekeys from 'lowercase-keys';
 
 export const Fokontany = {
   fokontany: async (parent, { id }, context) => {
@@ -13,7 +14,8 @@ export const Fokontany = {
       id: result.ref.value.id,
       geometry: {
         type: result.data.Geometry.Type,
-        coordinates: result.data.Geometry.Coordinates
+        polygon: result.data.Geometry.Type === 'Polygon' ? lowercasekeys(result.data.Geometry) : null,
+        multipolygon: result.data.Geometry.Type === 'MultiPolygon' ? lowercasekeys(result.data.Geometry) : null
       },
       name: result.data.Name,
       province: result.data.Province,
@@ -27,9 +29,17 @@ export const Fokontany = {
     const { data } = await context.client.query(
       q.Paginate(
         q.Match(q.Index('all_fokontany')),
-        // { size: 10 }
       ) 
     );
     return formatFokontany(data);
+  },
+  countFokontany: async (parent, args, context) => {
+    const { data } = await context.client.query(
+      q.Paginate(
+        q.Match(q.Index('all_fokontany')),
+        { size: 50000 },
+      ) 
+    );
+    return data.length;
   }
 }

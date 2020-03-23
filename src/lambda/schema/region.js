@@ -1,5 +1,5 @@
-import { objectType, extendType, stringArg, intArg } from 'nexus';
-import { Polygon } from './geometry';
+import { objectType, extendType, intArg, idArg } from 'nexus';
+import { Polygon, Geometry } from './geometry';
 import resolvers from '../resolvers';
 
 export const Region = objectType({
@@ -9,7 +9,7 @@ export const Region = objectType({
     t.string('name', { nullable: true })
     t.string('province', { nullable: true })
     t.string('code', { nullable: true })
-    t.field('geometry', { type: Polygon, nullable: true })
+    t.field('geometry', { type: Geometry, nullable: true })
   }
 })
 
@@ -18,7 +18,7 @@ export const RegionQuery = extendType({
   definition(t) {
     t.field('region', { 
       args: { 
-        id: stringArg({ required: true })
+        id: idArg({ required: true })
       }, 
       type: Region, 
       nullable: true,
@@ -32,6 +32,10 @@ export const RegionQuery = extendType({
       type: Region, 
       nullable: true,
       resolve: resolvers.Query.regions,
+    })
+    t.int('countRegions', { 
+      nullable: true,
+      resolve: resolvers.Query.countRegions
     })
   }
 })

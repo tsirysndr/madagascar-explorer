@@ -1,5 +1,6 @@
 import { query as q } from 'faunadb';
 import { formatRegions } from '../../formater';
+import lowercasekeys from 'lowercase-keys';
 
 export const Region = {
   region: async (parent, { id }, context) => {
@@ -13,7 +14,8 @@ export const Region = {
       id: result.ref.value.id,
       geometry: {
         type: result.data.Geometry.Type,
-        coordinates: result.data.Geometry.Coordinates
+        polygon: result.data.Geometry.Type === 'Polygon' ? lowercasekeys(result.data.Geometry) : null,
+        multipolygon: result.data.Geometry.Type === 'MultiPolygon' ? lowercasekeys(result.data.Geometry) : null
       },
       name: result.data.Name,
       province: result.data.Province,
@@ -27,5 +29,14 @@ export const Region = {
       ) 
     );
     return formatRegions(data);
+  },
+  countRegions: async (parent, args, context) => {
+    const { data } = await context.client.query(
+      q.Paginate(
+        q.Match(q.Index('all_regions')),
+        { size: 50000 },
+      ) 
+    );
+    return data.length;
   }
 }
