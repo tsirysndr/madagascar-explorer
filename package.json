@@ -21,6 +21,7 @@
     "react-dom": "^16.8.6",
     "react-map-gl": "^5.2.3",
     "react-md-spinner": "^1.0.0",
+    "react-router-dom": "^5.1.2",
     "react-scripts": "^3.0.1",
     "styled-components": "^5.0.1",
     "utf-8-validate": "^5.0.2"
