@@ -49,7 +49,11 @@ const Popover = (props) => {
           placeholder='Search ...' 
           style={{ marginLeft: 50 }} 
           autoComplete='off'
-          onChange={ evt => setKeyword(evt.target.value) }
+          onChange={ evt => {
+            if (evt.target.value.length > 3) {
+              setKeyword(evt.target.value)
+            }
+          }}
         />
         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 14 14" className="search-icon"
           style={{ position: 'absolute', top: 20, left: 15 }}
