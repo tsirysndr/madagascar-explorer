@@ -21,10 +21,14 @@ export const search = async (context, keyword) => {
   let communes = [];
   let fokontany = [];
 
-  regions = alasql(`SELECT * FROM ? WHERE LOWER(name) LIKE '%${keyword}%'`, [context.regions]);
-  districts = alasql(`SELECT * FROM ? WHERE LOWER(name) LIKE '%${keyword}%'`, [context.districts]);
-  communes = alasql(`SELECT * FROM ? WHERE LOWER(name) LIKE '%${keyword}%'`, [context.communes]);
-  fokontany = alasql(`SELECT * FROM ? WHERE LOWER(name) LIKE '%${keyword}%'`, [context.fokontany]);
+  regions = alasql(`SELECT * FROM ? WHERE LOWER(name) LIKE '%${keyword}%' ORDER BY name ASC`, [context.regions]);
+  districts = alasql(`SELECT * FROM ? WHERE LOWER(name) LIKE '%${keyword}%' ORDER BY name ASC`, [context.districts]);
+  communes = alasql(`SELECT * FROM ? WHERE LOWER(name) LIKE '%${keyword}%' ORDER BY name ASC`, [context.communes]);
+  fokontany = alasql(`SELECT * FROM ? WHERE LOWER(name) LIKE '%${keyword}%' ORDER BY name ASC`, [context.fokontany]);
 
   return { regions, districts, communes, fokontany };
+}
+
+export const sort = (list) => {
+  return alasql(`SELECT * FROM ? ORDER BY name ASC`, [list]);
 }

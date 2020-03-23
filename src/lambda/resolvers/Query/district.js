@@ -1,4 +1,4 @@
-import { find } from '../../repo';
+import { find, sort } from '../../repo';
 
 const baseURL = 'https://gitlab.com/tsiry.sndr/mg-geojson/-/raw/master/assets/districts';
 
@@ -7,6 +7,6 @@ export const District = {
     return find(id, context.districtsIndex, baseURL);
   },
   districts: (parent, args, context) => {
-    return context.districts;
+    return sort(context.districts);
   }
 }

@@ -1,4 +1,4 @@
-import { find } from '../../repo';
+import { find, sort } from '../../repo';
 
 const baseURL = 'https://gitlab.com/tsiry.sndr/mg-geojson/-/raw/master/assets/fokontany';
 
@@ -7,7 +7,6 @@ export const Fokontany = {
     return find(id, context.fokontanyIndex, baseURL);
   },
   allFokontany: (parent, args, context) => {
-    console.log(context.fokontany)
-    return context.fokontany;
+    return sort(context.fokontany);
   }
 }

@@ -1,4 +1,4 @@
-import { find } from '../../repo';
+import { find, sort } from '../../repo';
 
 const baseURL = 'https://gitlab.com/tsiry.sndr/mg-geojson/-/raw/master/assets/communes';
 
@@ -7,6 +7,6 @@ export const Commune = {
     return find(id, context.communesIndex, baseURL);
   },
   communes: (parent, args, context) => {
-    return context.communes;
+    return sort(context.communes);
   }
 }

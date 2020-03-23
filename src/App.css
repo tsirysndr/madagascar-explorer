@@ -15,6 +15,7 @@ body {
   background-color: rgba(255,255,255,0);
   font-family: MarkPro;
   margin-right: 10px;
+  height: 64px;
 }
 
 input:focus, textarea:focus, select:focus{
@@ -357,4 +358,105 @@ input:focus, textarea:focus, select:focus{
 }
 #between-popover .between-stops .betweens-6:before {
   width: 35px;
+}
+
+
+.popover-list {
+  flex-grow: 1;
+  margin: 0;
+  padding: 0 0 60px;
+  list-style: none;
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.popover-list.loading {
+  opacity: .5;
+  pointer-events: none;
+}
+.popover-list.loading #carbonads {
+  pointer-events: auto;
+}
+.popover-list.searching #carbonads {
+  display: none;
+}
+.popover-list li.nada {
+  padding: 14px;
+  pointer-events: none;
+}
+.popover-list li .item {
+  cursor: pointer;
+  padding: 14px;
+}
+.popover-list li a {
+  display: flex;
+  text-decoration: none;
+  align-items: center;
+  color: #000;
+}
+@media (hover: hover) {
+  .popover-list li .item:hover {
+    background-color: rgba(255,255,255,.6);
+  }
+}
+.popover-list li a [class*="-tag"] {
+  margin-right: 1em;
+}
+.popover-list li a.current {
+  background-color: #dbefb7;
+  pointer-events: none;
+}
+
+.service-tag {
+  display: inline-block;
+  padding: 3px 7px;
+  border: 2px solid #fff;
+  border-radius: 5px;
+  background-color: #95cf29;
+  color: #fff;
+  font-weight: bold;
+  text-decoration: none;
+  box-shadow: 0 0 5px rgba(0,0,0,.15);
+  overflow: hidden;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+a.service-tag:hover {
+  background-color: #7ac000;
+}
+.service-tag.current,
+.current .service-tag {
+  border-color: #729e1f;
+  background-color: #7ac000;
+  pointer-events: none;
+  animation: currenting infinite linear 1s alternate both;
+}
+.service-tag.highlight {
+  border-color: #729e1f;
+  animation: currenting infinite linear .5s alternate both;
+}
+@keyframes currenting {
+  0% {
+    border-color: #729e1f;
+  }
+  100% {
+    border: 2px solid #fff;
+  }
+}
+.service-tag span {
+  font-weight: normal;
+  font-size: .75em;
+  background-color: #fff;
+  color: #666;
+  padding: 7px;
+  margin: 0 -8px 0 5px;
+}
+
+.tag {
+  margin-top: 7px;
+  cursor: pointer;
+}
+
+.tag.inactive {
+  background-color: initial;
+  border: none;
 }
