@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { useQuery } from '@apollo/react-hooks'
 import { gql } from 'apollo-boost'
 import { Tag } from 'antd'
+import MDSpinner from 'react-md-spinner'
 
 const SEARCH = gql`
   query Search($keyword: String!) {
@@ -40,7 +41,6 @@ const Popover = (props) => {
   const [filter, setFilter] = useState(1)
   const [keyword, setKeyword] = useState('')
   const { loading, error, data } = useQuery(SEARCH, { variables: { keyword }})
-  console.log(loading, error, data)
   return (
     <div id="search-popover" className={props.popoverClass}>
       <div style={{ display: 'flex', height: 64 }} onClick={() => props.setExpanded(true) }>
@@ -65,6 +65,13 @@ const Popover = (props) => {
         </svg>
       </div>
       {
+        (loading || error) && (
+          <div id='loader'>
+            <MDSpinner />
+          </div>
+        )
+      }
+      {
         !loading && !error && (
           <div style={{ padding: 10 }}>
             <Tag color="cyan" className={`tag ${filter !== 1 ? 'inactive' : ''}`} onClick={() => setFilter(1)}>Regions ({data.search.regions.length})</Tag>
@@ -79,8 +86,8 @@ const Popover = (props) => {
           <ul className='popover-list'>
             <li>
               {
-                data.search.regions.map(item => (
-                  <a href='/#' className='item'>
+                data.search.regions.map((item, index) => (
+                  <a href='/#' className='item' key={index}>
                     {item.name}
                   </a> 
                 ))
@@ -94,8 +101,8 @@ const Popover = (props) => {
           <ul className='popover-list'>
             <li>
               {
-                data.search.districts.map(item => (
-                  <div className='item'>
+                data.search.districts.map((item, index) => (
+                  <div className='item' key={index}>
                     <a href='/#'>
                       {item.name}
                     </a>
@@ -113,8 +120,8 @@ const Popover = (props) => {
             <li>
               {
                 data.search.communes.map((item, index) => (
-                  <div className='item'>
-                    <a href='/#' key={index}>
+                  <div className='item' key={index}>
+                    <a href='/#'>
                       {item.name}
                     </a> 
                     <div>{item.district} &middot; {item.region}</div> 
@@ -131,8 +138,8 @@ const Popover = (props) => {
             <li>
               {
                 data.search.fokontany.map((item, index) => (
-                  <div className='item'>
-                    <a href='/#' key={index}>
+                  <div className='item' key={index}>
+                    <a href='/#'>
                       {item.name}
                     </a>
                     <div>{item.commune} &middot; {item.district} &middot; {item.region}</div> 
