@@ -1,4 +1,4 @@
-import { search } from '../../repo';
+import { search } from '../../repository';
 
 export const Search = {
   search: (parent, { keyword }, context) => {

@@ -9,7 +9,11 @@
     "@deck.gl/mapbox": "^8.1.0",
     "@deck.gl/react": "^8.1.0",
     "alasql": "^0.5.5",
+<<<<<<< HEAD
     "antd": "^4.0.4",
+=======
+    "antd": "^3.26.14",
+>>>>>>> Use Faunadb queries
     "apollo-boost": "^0.4.7",
     "apollo-server-lambda": "^2.11.0",
     "axios": "^0.19.0",
@@ -29,8 +33,13 @@
   },
   "scripts": {
     "start": "react-scripts start",
+    "dev": "dotenv -e .env react-scripts start",
     "start:lambda": "NODE_ENV=development netlify-lambda serve src/lambda",
+<<<<<<< HEAD
     "start:dev": "dotenv -e .env react-scripts start",
+=======
+    "dev:lambda": "dotenv -e .env npm run start:lambda",
+>>>>>>> Use Faunadb queries
     "build": "run-p build:**",
     "build:app": "react-scripts build",
     "build:lambda": "netlify-lambda build src/lambda",

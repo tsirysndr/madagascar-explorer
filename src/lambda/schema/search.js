@@ -1,5 +1,5 @@
 import resolvers from '../resolvers';
-import { extendType, stringArg, objectType, intArg } from 'nexus';
+import { extendType, stringArg, objectType } from 'nexus';
 import { Region } from './region';
 import { District } from './district';
 import { Commune } from './commune';
