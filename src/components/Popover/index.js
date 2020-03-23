@@ -50,7 +50,7 @@ const Popover = (props) => {
           style={{ marginLeft: 50 }} 
           autoComplete='off'
           onChange={ evt => {
-            if (evt.target.value.length > 3) {
+            if (evt.target.value.length > 2) {
               setKeyword(evt.target.value)
             }
           }}
