@@ -23,7 +23,7 @@ export default makeSchema({
     MultiPolygon,
     Region,
     RegionQuery,
-    SearchQuery,
     Results,
+    SearchQuery,
   ],
 });
