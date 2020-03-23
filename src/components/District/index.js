@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import DeckGL from '@deck.gl/react';
-import { GeoJsonLayer } from '@deck.gl/layers';
-import MapGL, { NavigationControl } from 'react-map-gl';
-import Popover from '../Popover';
-import { useQuery } from '@apollo/react-hooks';
+import React, { useState, useEffect } from 'react'
+import DeckGL from '@deck.gl/react'
+import { GeoJsonLayer } from '@deck.gl/layers'
+import MapGL from 'react-map-gl'
+import Popover from '../Popover'
+import { useQuery } from '@apollo/react-hooks'
 import { gql } from 'apollo-boost'
 
 const DISTRICT = gql`
@@ -30,20 +30,17 @@ const DISTRICT = gql`
 `
 
 // Set your mapbox access token here
-const MAPBOX_ACCESS_TOKEN = process.env.REACT_APP_MAPBOX_ACCESS_TOKEN;
-const MAPBOX_STYLE = process.env.REACT_APP_MAP_STYLE;
-
-// Data to be used by the LineLayer
-const data = [{sourcePosition: [-122.41669, 37.7853], targetPosition: [-122.41669, 37.781]}];
+const MAPBOX_ACCESS_TOKEN = process.env.REACT_APP_MAPBOX_ACCESS_TOKEN
+const MAPBOX_STYLE = process.env.REACT_APP_MAP_STYLE
 
 const District = (props) => {
   const { id } = props.match.params
-  const { loading, error, data } = useQuery(DISTRICT, { variables: { id }})
+  const { loading, error, data } = useQuery(DISTRICT, { variables: { id } })
   console.log(loading, error, data)
-  const [layers, setLayers] = useState([]);
+  const [layers, setLayers] = useState([])
   const [expanded, setExpanded] = useState(false)
   const popoverClass = `popover ${expanded ? 'expand' : 'shrink'}`
-  const [ viewport, setViewport ] = useState({
+  const [viewport, setViewport] = useState({
     longitude: 47.52186,
     latitude: -18.91449,
     zoom: 11.97,
@@ -55,12 +52,12 @@ const District = (props) => {
     if (!loading && !error) {
       const { geometry } = data.district
       const { type } = geometry
-      const [ longitude, latitude ] = type === 'Polygon' ? geometry.polygon.coordinates[0][0] : geometry.multipolygon.coordinates[0][0][0] 
+      const [longitude, latitude] = type === 'Polygon' ? geometry.polygon.coordinates[0][0] : geometry.multipolygon.coordinates[0][0][0]
       const location = {
         ...viewport,
         longitude,
         latitude,
-        zoom: 8,
+        zoom: 8
       }
       setViewport(location)
       const geojson = {
@@ -68,7 +65,7 @@ const District = (props) => {
         features: [
           {
             type: 'Feature',
-            geometry: type === 'Polygon' ? geometry.polygon : geometry.multipolygon,
+            geometry: type === 'Polygon' ? geometry.polygon : geometry.multipolygon
           }
         ]
       }
@@ -83,34 +80,33 @@ const District = (props) => {
           lineWidthScale: 20,
           lineWidthMinPixels: 2,
           getElevation: 1,
-          getFillColor: [47, 84, 235, 127],
+          getFillColor: [47, 84, 235, 127]
         })
       ])
     }
   }, [loading, error, data])
 
-    return (
-      <div>
-        <DeckGL
-          initialViewState={viewport}
-          controller={true}
-          layers={layers}
-          onClick={() => setExpanded(false) }
-        >
-          <MapGL
-            {...viewport}
-            width="100vw"
-            height="100vh"
-            maxPitch={85}
-            mapboxApiAccessToken={MAPBOX_ACCESS_TOKEN}
-            mapStyle={MAPBOX_STYLE}
-            onViewportChange={value => setViewport(value)}
-          >
-          </MapGL>
-        </DeckGL>
-        <Popover {...{ popoverClass, setExpanded }} />
-      </div>
-    )
+  return (
+    <div>
+      <DeckGL
+        initialViewState={viewport}
+        controller
+        layers={layers}
+        onClick={() => setExpanded(false)}
+      >
+        <MapGL
+          {...viewport}
+          width='100vw'
+          height='100vh'
+          maxPitch={85}
+          mapboxApiAccessToken={MAPBOX_ACCESS_TOKEN}
+          mapStyle={MAPBOX_STYLE}
+          onViewportChange={value => setViewport(value)}
+        />
+      </DeckGL>
+      <Popover {...{ popoverClass, setExpanded }} />
+    </div>
+  )
 }
 
 export default District
