@@ -5,6 +5,7 @@ import MapGL from 'react-map-gl'
 import Popover from '../Popover'
 import { useQuery } from '@apollo/react-hooks'
 import { gql } from 'apollo-boost'
+import MDSpinner from 'react-md-spinner'
 
 const FOKONTANY = gql`
   query Fokontany($id: ID!) {
@@ -50,6 +51,10 @@ const Fokontany = (props) => {
   })
 
   useEffect(() => {
+    setLayers([])
+  }, [id])
+  
+  useEffect(() => {
     if (!loading && !error) {
       const { geometry } = data.fokontany
       const { type } = geometry
@@ -86,6 +91,14 @@ const Fokontany = (props) => {
       ])
     }
   }, [loading, error, data])
+
+  if (loading) {
+    return (
+      <div className='spinner'>
+        <MDSpinner />
+      </div>
+    )
+  }
 
   return (
     <div>

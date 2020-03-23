@@ -5,6 +5,7 @@ import MapGL from 'react-map-gl'
 import Popover from '../Popover'
 import { useQuery } from '@apollo/react-hooks'
 import { gql } from 'apollo-boost'
+import MDSpinner from 'react-md-spinner'
 
 const DISTRICT = gql`
   query District($id: ID!) {
@@ -49,6 +50,10 @@ const District = (props) => {
   })
 
   useEffect(() => {
+    setLayers([])
+  }, [id])
+
+  useEffect(() => {
     if (!loading && !error) {
       const { geometry } = data.district
       const { type } = geometry
@@ -85,6 +90,14 @@ const District = (props) => {
       ])
     }
   }, [loading, error, data])
+
+  if (loading) {
+    return (
+      <div className='spinner'>
+        <MDSpinner />
+      </div>
+    )
+  }
 
   return (
     <div>

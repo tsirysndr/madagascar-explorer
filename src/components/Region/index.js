@@ -5,6 +5,7 @@ import MapGL from 'react-map-gl'
 import Popover from '../Popover'
 import { useQuery } from '@apollo/react-hooks'
 import { gql } from 'apollo-boost'
+import MDSpinner from 'react-md-spinner'
 
 const REGION = gql`
   query Region($id: ID!) {
@@ -47,6 +48,10 @@ const Region = (props) => {
   })
 
   useEffect(() => {
+    setLayers([])
+  }, [id])
+
+  useEffect(() => {
     if (!loading && !error) {
       const { geometry } = data.region
       const { type } = geometry
@@ -84,6 +89,14 @@ const Region = (props) => {
     }
   }, [loading, error, data])
 
+  if (loading) {
+    return (
+      <div className='spinner'>
+        <MDSpinner />
+      </div>
+    )
+  }
+
   return (
     <div>
       <DeckGL
@@ -99,7 +112,7 @@ const Region = (props) => {
           maxPitch={85}
           mapboxApiAccessToken={MAPBOX_ACCESS_TOKEN}
           mapStyle={MAPBOX_STYLE}
-          onViewportChange={value => setViewport(value)}
+          // onViewportChange={value => setViewport(value)}
         />
       </DeckGL>
       <Popover {...{ popoverClass, setExpanded }} />

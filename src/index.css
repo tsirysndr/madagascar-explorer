@@ -17,6 +17,14 @@ code {
   src: local('MarkPro'), url(./assets/fonts/MarkPro-Medium.ttf) format('truetype');
 }
 
+.spinner {
+  height: 100vh; 
+  width: 100vw; 
+  display: flex; 
+  align-items: center; 
+  justify-content: center;
+}
+
 #loader {
   height: 100%;
   display: flex;
