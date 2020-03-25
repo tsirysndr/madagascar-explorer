@@ -24,6 +24,10 @@ This project is a reference demo showing you how to use [Create React App v3](ht
 
 > ⚠️NOTE: You may not need this project at all. [Netlify Dev](https://github.com/netlify/netlify-dev-plugin) works with `create-react-app` out of the box! Only use `netlify-lambda` if you need a build step for your functions, eg if you want to use Babel or TypeScript ([see its README for details](https://github.com/netlify/netlify-lambda/blob/master/README.md#netlify-lambda)).
 
+[![Screenshot of Madagascar Explorer](preview.png)](https://mg-explorer.netlify.com/)
+[![Screenshot of Madagascar Explorer API](preview-api.png)](https://mg-explorer.netlify.com/.netlify/functions/graphql)
+
+
 ## Project Setup
 
 **Source**: The main addition to base Create-React-App is a new folder: `src/lambda`. This folder is specified and can be changed in the `package.json` script: `"build:lambda": "netlify-lambda build src/lambda"`.
