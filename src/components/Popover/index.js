@@ -111,6 +111,7 @@ const SEARCH = gql`
   }
 `
 
+/*
 const COUNT = gql`
   query {
     countRegions
@@ -119,6 +120,7 @@ const COUNT = gql`
     countFokontany
   }
 `
+*/
 
 const Popover = (props) => {
   const [filter, setFilter] = useState(1)
@@ -130,14 +132,13 @@ const Popover = (props) => {
   const [fokontanyAfter, setFokontanyAfter] = useState(null)
   const [communeAfter, setCommuneAfter] = useState(null)
   const [districtAfter, setDistrictAfter] = useState(null)
-  const [regionAfter, setRegionAfter] = useState(null)
   const { loading, error, data } = useQuery(SEARCH, { variables: { keyword } })
   // const countRes = useQuery(COUNT)
-  const allFokontanyRes = useQuery(ALL_FOKONTANY, { variables: { after: fokontanyAfter, size: 100 }})
-  const communesRes = useQuery(COMMUNES, { variables: { after: communeAfter, size: 100 }})
-  const districtsRes = useQuery(DISTRICTS, { variables: { after: districtAfter, size: 10 }})
-  const regionsRes = useQuery(REGIONS, { variables: { after: regionAfter, size: 10 }})
-  
+  const allFokontanyRes = useQuery(ALL_FOKONTANY, { variables: { after: fokontanyAfter, size: 100 } })
+  const communesRes = useQuery(COMMUNES, { variables: { after: communeAfter, size: 100 } })
+  const districtsRes = useQuery(DISTRICTS, { variables: { after: districtAfter, size: 10 } })
+  const regionsRes = useQuery(REGIONS, { variables: { after: null, size: 10 } })
+
   const handleUpdate = () => {
     switch (filter) {
       case 1:
@@ -248,18 +249,19 @@ const Popover = (props) => {
           </div>
         )
       }
-      <PopoverList {...{ 
-        filter, 
-        data, 
-        error, 
-        handleUpdate, 
+      <PopoverList {...{
+        filter,
+        data,
+        error,
+        handleUpdate,
         loading,
         keyword,
         fokontany,
-        communes, 
+        communes,
         districts,
-        regions, 
-      }} />
+        regions
+      }}
+      />
     </div>
   )
 }

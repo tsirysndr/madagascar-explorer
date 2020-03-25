@@ -53,7 +53,7 @@ const Fokontany = (props) => {
   useEffect(() => {
     setLayers([])
   }, [id])
-  
+
   useEffect(() => {
     if (!loading && !error) {
       const { geometry } = data.fokontany

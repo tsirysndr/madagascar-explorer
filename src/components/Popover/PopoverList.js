@@ -17,7 +17,7 @@ class PopoverList extends Component {
       loading,
       error,
       data,
-      history, 
+      history
     } = this.props
     const fokontany = keyword === '' ? this.props.fokontany : data.search.fokontany
     const communes = keyword === '' ? this.props.communes : data.search.communes
