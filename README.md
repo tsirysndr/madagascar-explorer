@@ -1,6 +1,21 @@
 ## Madagascar Explorer
 
-[![Netlify Status](https://api.netlify.com/api/v1/badges/69e3fe5e-27d5-4027-be03-fa80a1013fcd/deploy-status)](https://app.netlify.com/sites/mg-explorer/deploys)
+<p>
+  <a href="https://app.netlify.com/sites/mg-explorer/deploys">
+    <img src="https://api.netlify.com/api/v1/badges/69e3fe5e-27d5-4027-be03-fa80a1013fcd/deploy-status" target="_blank" />
+  </a>  
+  <a href="https://github.com/tsirysndr/madagascar-explorer/commits/master">
+    <img src="https://img.shields.io/github/last-commit/tsirysndr/madagascar-explorer.svg" target="_blank" />
+  </a>  
+<img alt="GitHub code size in bytes" src="https://img.shields.io/github/languages/code-size/tsirysndr/madagascar-explorer">
+<a href="https://github.com/tsirysndr/madagascar-explorer/graphs/contributors">
+  <img alt="GitHub contributors" src="https://img.shields.io/github/contributors/tsirysndr/madagascar-explorer">
+</a>
+<a href="https://github.com/tsirysndr/madagascar-explorer/blob/master/LICENSE">
+  <img alt="License: BSD" src="https://img.shields.io/badge/license-BSD-green.svg" target="_blank" />
+</a>
+
+</p>
 
 This project is a reference demo showing you how to use [Create React App v3](https://github.com/facebookincubator/create-react-app) and [netlify-lambda v1](https://github.com/netlify/netlify-lambda) together in a [Netlify Dev](https://www.netlify.com/docs/cli/?utm_source=github&utm_medium=swyx-CRAL&utm_campaign=devex#netlify-dev-beta) workflow. You can clone this and immediately be productive with a React app with serverless Netlify Functions in the same repo. Alternatively you can deploy straight to Netlify with this one-click Deploy:
 
