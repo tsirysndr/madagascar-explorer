@@ -1,9 +1,78 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useQuery } from '@apollo/react-hooks'
 import { gql } from 'apollo-boost'
 import { Tag } from 'antd'
 import MDSpinner from 'react-md-spinner'
 import PopoverList from './PopoverList'
+
+const ALL_FOKONTANY = gql`
+  query AllFokontany($after: ID, $size: Int) {
+    allFokontany(after: $after, size: $size) {
+      data {
+        id
+        name
+        code
+        province
+        commune
+        district
+        region
+      }
+      after {
+        id
+      }
+    }
+  }
+`
+
+const COMMUNES = gql`
+  query Communes($after: ID, $size: Int) {
+      communes(after: $after, size: $size) {
+        data {
+        id
+        name
+        province
+        code
+        district
+        region
+      }
+      after {
+        id
+      }
+    } 
+  }
+`
+
+const DISTRICTS = gql`
+  query Districts($after: ID, $size: Int) {
+    districts(after: $after, size: $size) {
+      data {
+        id
+        name
+        code
+        region
+      }
+      after {
+        id
+      }
+    }
+  }
+`
+
+const REGIONS = gql`
+  query Regions($after: ID, $size: Int) {
+    regions(after: $after, size: $size) {
+      data {
+        id
+        name
+        code
+        province
+      }
+      after {
+        id
+      }
+    }
+  }
+`
 
 const SEARCH = gql`
   query Search($keyword: String!) {
@@ -42,13 +111,78 @@ const SEARCH = gql`
   }
 `
 
+const COUNT = gql`
+  query {
+    countRegions
+    countDistricts
+    countCommunes
+    countFokontany
+  }
+`
+
 const Popover = (props) => {
   const [filter, setFilter] = useState(1)
   const [keyword, setKeyword] = useState('')
+  const [fokontany, setFokontany] = useState([])
+  const [communes, setCommunes] = useState([])
+  const [districts, setDistricts] = useState([])
+  const [regions, setRegions] = useState([])
+  const [fokontanyAfter, setFokontanyAfter] = useState(null)
+  const [communeAfter, setCommuneAfter] = useState(null)
+  const [districtAfter, setDistrictAfter] = useState(null)
+  const [regionAfter, setRegionAfter] = useState(null)
   const { loading, error, data } = useQuery(SEARCH, { variables: { keyword } })
+  // const countRes = useQuery(COUNT)
+  const allFokontanyRes = useQuery(ALL_FOKONTANY, { variables: { after: fokontanyAfter, size: 100 }})
+  const communesRes = useQuery(COMMUNES, { variables: { after: communeAfter, size: 100 }})
+  const districtsRes = useQuery(DISTRICTS, { variables: { after: districtAfter, size: 10 }})
+  const regionsRes = useQuery(REGIONS, { variables: { after: regionAfter, size: 10 }})
+  
   const handleUpdate = () => {
-    console.log('load more ...')
+    switch (filter) {
+      case 1:
+        break
+      case 2:
+        setDistrictAfter(districts[districts.length - 1].id)
+        break
+      case 3:
+        setCommuneAfter(communes[communes.length - 1].id)
+        break
+      case 4:
+        setFokontanyAfter(fokontany[fokontany.length - 1].id)
+        break
+      default:
+        break
+    }
   }
+
+  useEffect(() => {
+    if (allFokontanyRes.data) {
+      const newFokontany = !fokontanyAfter ? allFokontanyRes.data.allFokontany.data : [...fokontany, ...allFokontanyRes.data.allFokontany.data]
+      setFokontany(newFokontany)
+    }
+  }, [allFokontanyRes.data])
+
+  useEffect(() => {
+    if (communesRes.data) {
+      const newCommunes = !communeAfter ? communesRes.data.communes.data : [...communes, ...communesRes.data.communes.data]
+      setCommunes(newCommunes)
+    }
+  }, [communesRes.data])
+
+  useEffect(() => {
+    if (districtsRes.data) {
+      const newDistricts = !districtAfter ? districtsRes.data.districts.data : [...districts, ...districtsRes.data.districts.data]
+      setDistricts(newDistricts)
+    }
+  }, [districtsRes.data])
+
+  useEffect(() => {
+    if (regionsRes.data) {
+      setRegions(regionsRes.data.regions.data)
+    }
+  }, [regionsRes.data])
+
   return (
     <div id='search-popover' className={props.popoverClass}>
       <div style={{ display: 'flex', height: 64 }} onClick={() => props.setExpanded(true)}>
@@ -114,7 +248,18 @@ const Popover = (props) => {
           </div>
         )
       }
-      <PopoverList {...{ filter, data, error, handleUpdate, loading }} />
+      <PopoverList {...{ 
+        filter, 
+        data, 
+        error, 
+        handleUpdate, 
+        loading,
+        keyword,
+        fokontany,
+        communes, 
+        districts,
+        regions, 
+      }} />
     </div>
   )
 }

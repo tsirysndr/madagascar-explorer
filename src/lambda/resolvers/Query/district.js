@@ -24,7 +24,7 @@ export const District = {
     };
   },
   districts: async (parent, { after, size }, context) => {
-    const pagination = after && size ? { after: [ q.Ref(q.Collection('districts'), after) ], size } : { size: 100 };
+    const pagination = after && size ? { after: [ q.Ref(q.Collection('districts'), after) ], size } : { size: 10 };
     const result = await context.client.query(
       q.Paginate(
         q.Match(q.Index('districts_sort_by_ref')),
