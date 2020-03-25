@@ -13,6 +13,14 @@ export const Region = objectType({
   }
 })
 
+export const RegionList = objectType({
+  name: 'RegionList',
+  definition(t) {
+    t.field('data', { list: [false], type: Region, nullable: true })
+    t.field('after', { type: Region, nullable: true })
+  }
+})
+
 export const RegionQuery = extendType({
   type: 'Query',
   definition(t) {
@@ -24,12 +32,12 @@ export const RegionQuery = extendType({
       nullable: true,
       resolve: resolvers.Query.region, 
     })
-    t.list.field('regions', {
+    t.field('regions', {
       args: {
-        skip: intArg({ required: false }),
-        limit: intArg({ required: false })
+        after: idArg({ required: false }),
+        size: intArg({ required: false })
       },
-      type: Region, 
+      type: RegionList, 
       nullable: true,
       resolve: resolvers.Query.regions,
     })

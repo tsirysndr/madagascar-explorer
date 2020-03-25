@@ -1,5 +1,5 @@
 import { query as q } from 'faunadb';
-import { formatDistricts } from '../../formater';
+import { formatDistricts, formatDistrict } from '../../formater';
 import lowercasekeys from 'lowercase-keys';
 
 export const District = {
@@ -23,13 +23,15 @@ export const District = {
       region: result.data.Region,
     };
   },
-  districts: async (parent, args, context) => {
-    const { data } = await context.client.query(
+  districts: async (parent, { after, size }, context) => {
+    const pagination = after && size ? { after: [ q.Ref(q.Collection('districts'), after) ], size } : { size: 100 };
+    const result = await context.client.query(
       q.Paginate(
-        q.Match(q.Index('all_districts')),
+        q.Match(q.Index('districts_sort_by_ref')),
+        pagination
       ) 
     );
-    return formatDistricts(data);
+    return { data: formatDistricts(result.data), after: formatDistrict(result.after) };
   },
   countDistricts: async (parent, args, context) => {
     const { data } = await context.client.query(

@@ -1,6 +1,6 @@
 
 import { query as q } from 'faunadb';
-import { formatCommunes } from '../../formater';
+import { formatCommunes, formatCommune } from '../../formater';
 import lowercasekeys from 'lowercase-keys';
 
 export const Commune = {
@@ -25,13 +25,15 @@ export const Commune = {
       region: result.data.Region,
     };
   },
-  communes: async (parent, args, context) => {
-    const { data } = await context.client.query(
+  communes: async (parent, { after, size }, context) => {
+    const pagination = after && size ? { after: [ q.Ref(q.Collection('communes'), after) ], size } : { size: 100 };
+    const result = await context.client.query(
       q.Paginate(
-        q.Match(q.Index('all_communes')),
+        q.Match(q.Index('communes_sort_by_ref')),
+        pagination
       ) 
     );
-    return formatCommunes(data);
+    return { data: formatCommunes(result.data), after: formatCommune(result.after) };
   },
   countCommunes: async (parent, args, context) => {
     const { data } = await context.client.query(
