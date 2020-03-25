@@ -15,6 +15,14 @@ export const Commune = objectType({
   }
 })
 
+export const CommuneList = objectType({
+  name: 'CommuneList',
+  definition(t) {
+    t.field('data', { list: [false], type: Commune, nullable: true })
+    t.field('after', { type: Commune, nullable: true })
+  }
+})
+
 export const CommuneQuery = extendType({
   type: 'Query',
   definition(t) {
@@ -26,12 +34,12 @@ export const CommuneQuery = extendType({
       nullable: true,
       resolve: resolvers.Query.commune, 
     })
-    t.list.field('communes', { 
+    t.field('communes', { 
       args: {
-        skip: intArg({ required: false }),
-        limit: intArg({ required: false })
+        after: idArg({ required: false }),
+        size: intArg({ required: false })
       },
-      type: Commune, 
+      type: CommuneList, 
       nullable: true,
       resolve: resolvers.Query.communes, 
     })

@@ -1,5 +1,5 @@
 import { query as q } from 'faunadb';
-import { formatRegions } from '../../formater';
+import { formatRegions, formatRegion } from '../../formater';
 import lowercasekeys from 'lowercase-keys';
 
 export const Region = {
@@ -22,13 +22,15 @@ export const Region = {
       code: result.data.Code,
     };
   },
-  regions: async (parent, args, context) => {
-    const { data } = await context.client.query(
+  regions: async (parent, { after, size }, context) => {
+    const pagination = after && size ? { after: [ q.Ref(q.Collection('regions'), after) ], size } : { size: 100 };
+    const result = await context.client.query(
       q.Paginate(
-        q.Match(q.Index('all_regions')),
+        q.Match(q.Index('regions_sort_by_ref')),
+        pagination
       ) 
     );
-    return formatRegions(data);
+    return { data: formatRegions(result.data), after: formatRegion(result.after) };
   },
   countRegions: async (parent, args, context) => {
     const { data } = await context.client.query(

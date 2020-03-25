@@ -14,6 +14,14 @@ export const District = objectType({
   }
 })
 
+export const DistrictList = objectType({
+  name: 'DistrictList',
+  definition(t) {
+    t.field('data', { list: [false], type: District, nullable: true })
+    t.field('after', { type: District, nullable: true })
+  }
+})
+
 export const DistrictQuery = extendType({
   type: 'Query',
   definition(t) {
@@ -25,12 +33,12 @@ export const DistrictQuery = extendType({
       nullable: true,
       resolve: resolvers.Query.district 
     })
-    t.list.field('districts', { 
+    t.field('districts', { 
       args: {
-        skip: intArg({ required: false }),
-        limit: intArg({ required: false })
+        after: idArg({ required: false }),
+        size: intArg({ required: false })
       },
-      type: District, 
+      type: DistrictList, 
       nullable: true,
       resolve: resolvers.Query.districts
     })

@@ -12,12 +12,17 @@ class PopoverList extends Component {
 
   render () {
     const {
+      keyword,
       filter,
       loading,
       error,
       data,
       history
     } = this.props
+    const fokontany = keyword === '' ? this.props.fokontany : data.search.fokontany
+    const communes = keyword === '' ? this.props.communes : data.search.communes
+    const districts = keyword === '' ? this.props.districts : data.search.districts
+    const regions = keyword === '' ? this.props.regions : data.search.regions
     return (
       <div ref='iScroll' style={{ overflow: 'auto' }}>
         {
@@ -25,7 +30,7 @@ class PopoverList extends Component {
             <ul className='popover-list'>
               <li>
                 {
-                  data.search.regions.map((item, index) => (
+                  regions.map((item, index) => (
                     <a href={`#!/regions/${item.id}`} className='item' key={index}>
                       {item.name}
                     </a>
@@ -40,7 +45,7 @@ class PopoverList extends Component {
             <ul className='popover-list'>
               <li>
                 {
-                  data.search.districts.map((item, index) => (
+                  districts.map((item, index) => (
                     <div className='item' key={index} onClick={() => history.push(`/districts/${item.id}`)}>
                       <a href={`#!/districts/${item.id}`}>
                         {item.name}
@@ -58,7 +63,7 @@ class PopoverList extends Component {
             <ul className='popover-list'>
               <li>
                 {
-                  data.search.communes.map((item, index) => (
+                  communes.map((item, index) => (
                     <div className='item' key={index} onClick={() => history.push(`/communes/${item.id}`)}>
                       <a href={`#!/communes/${item.id}`}>
                         {item.name}
@@ -76,7 +81,7 @@ class PopoverList extends Component {
             <ul className='popover-list'>
               <li>
                 {
-                  data.search.fokontany.map((item, index) => (
+                  fokontany.map((item, index) => (
                     <div className='item' key={index} onClick={() => history.push(`/fokontany/${item.id}`)}>
                       <a href={`#!/fokontany/${item.id}`}>
                         {item.name}

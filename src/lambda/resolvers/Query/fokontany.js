@@ -1,5 +1,5 @@
 import { query as q } from 'faunadb';
-import { formatFokontany } from '../../formater';
+import { formatFokontany, formatFokontanyItem } from '../../formater';
 import lowercasekeys from 'lowercase-keys';
 
 export const Fokontany = {
@@ -25,13 +25,15 @@ export const Fokontany = {
       region: result.data.Region,
     };
   },
-  allFokontany: async (parent, args, context) => {
-    const { data } = await context.client.query(
+  allFokontany: async (parent, { after, size }, context) => {
+    const pagination = after && size ? { after: [ q.Ref(q.Collection('fokontany'), after) ], size } : { size: 100 };
+    const result = await context.client.query(
       q.Paginate(
-        q.Match(q.Index('all_fokontany')),
-      ) 
+        q.Match(q.Index('fokontany_sort_by_ref')),
+        pagination
+      ),
     );
-    return formatFokontany(data);
+    return { data: formatFokontany(result.data), after: formatFokontanyItem(result.after) };
   },
   countFokontany: async (parent, args, context) => {
     const { data } = await context.client.query(

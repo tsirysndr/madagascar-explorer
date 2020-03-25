@@ -16,6 +16,14 @@ export const Fokontany = objectType({
   }
 })
 
+export const FokontanyList = objectType({
+  name: 'FokontanyList',
+  definition(t) {
+    t.field('data', { list: [false], type: Fokontany, nullable: true })
+    t.field('after', { type: Fokontany, nullable: true })
+  }
+})
+
 export const FokontanyQuery = extendType({
   type: 'Query',
   definition(t) {
@@ -27,12 +35,12 @@ export const FokontanyQuery = extendType({
       nullable: true,
       resolve: resolvers.Query.fokontany, 
     })
-    t.list.field('allFokontany', { 
+    t.field('allFokontany', { 
       args: {
-        skip: intArg({ required: false }),
-        limit: intArg({ required: false })
+        after: idArg({ required: false }),
+        size: intArg({ required: false })
       },
-      type: Fokontany, 
+      type: FokontanyList, 
       nullable: true ,
       resolve: resolvers.Query.allFokontany,
     })
