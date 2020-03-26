@@ -36,6 +36,10 @@ const MAPBOX_STYLE = process.env.REACT_APP_MAP_STYLE
 const Commune = (props) => {
   const { id } = props.match.params
   const { loading, error, data } = useQuery(COMMUNE, { variables: { id } })
+  const [showPopup, setShowPopup] = useState(false)
+  const [name, setName] = useState('')
+  const [popupX, setPopupX] = useState(0)
+  const [popupY, setPopupY] = useState(0)
   const [layers, setLayers] = useState([])
   const [expanded, setExpanded] = useState(false)
   const popoverClass = `popover ${expanded ? 'expand' : 'shrink'}`
@@ -48,12 +52,13 @@ const Commune = (props) => {
   })
 
   useEffect(() => {
+    setShowPopup(false)
     setLayers([])
   }, [id])
 
   useEffect(() => {
     if (!loading && !error) {
-      const { geometry } = data.commune
+      const { geometry, name } = data.commune
       const { type } = geometry
       const [longitude, latitude] = type === 'Polygon' ? geometry.polygon.coordinates[0][0] : geometry.multipolygon.coordinates[0][0][0]
       const location = {
@@ -62,6 +67,7 @@ const Commune = (props) => {
         latitude,
         zoom: 9
       }
+      setName(name)
       setViewport(location)
       const geojson = {
         type: 'FeatureCollection',
@@ -83,7 +89,14 @@ const Commune = (props) => {
           lineWidthScale: 20,
           lineWidthMinPixels: 2,
           getElevation: 1,
-          getFillColor: [250, 84, 28, 127]
+          getFillColor: [250, 84, 28, 127],
+          onHover: ({ x, y }) => {
+            if (x > 0 && y > 0) {
+              setPopupX(x - 40)
+              setPopupY(y - 40)
+              setShowPopup(true)
+            }
+          }
         })
       ])
     }
@@ -99,6 +112,24 @@ const Commune = (props) => {
 
   return (
     <div>
+      {
+        showPopup && (
+          <div className="ant-popover ant-popover-placement-top" 
+            style={{ position: 'absolute', left: popupX, top: popupY}}>
+            <div className="ant-popover-content">
+              <div class="ant-popover-arrow">
+              </div>
+                <div className="ant-popover-inner" role="tooltip">
+                <div>
+                  <div className="ant-popover-inner-content">
+                    <div>{name}</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )
+      }
       <DeckGL
         initialViewState={viewport}
         controller

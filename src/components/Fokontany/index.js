@@ -11,6 +11,7 @@ const FOKONTANY = gql`
   query Fokontany($id: ID!) {
     fokontany(id: $id) {
       id
+      name
       code
       commune
       province
@@ -38,7 +39,10 @@ const MAPBOX_STYLE = process.env.REACT_APP_MAP_STYLE
 const Fokontany = (props) => {
   const { id } = props.match.params
   const { loading, error, data } = useQuery(FOKONTANY, { variables: { id } })
-  console.log(loading, error, data)
+  const [showPopup, setShowPopup] = useState(false)
+  const [name, setName] = useState('')
+  const [popupX, setPopupX] = useState(0)
+  const [popupY, setPopupY] = useState(0)
   const [layers, setLayers] = useState([])
   const [expanded, setExpanded] = useState(false)
   const popoverClass = `popover ${expanded ? 'expand' : 'shrink'}`
@@ -51,12 +55,13 @@ const Fokontany = (props) => {
   })
 
   useEffect(() => {
+    setShowPopup(false)
     setLayers([])
   }, [id])
 
   useEffect(() => {
     if (!loading && !error) {
-      const { geometry } = data.fokontany
+      const { geometry, name } = data.fokontany
       const { type } = geometry
       const [longitude, latitude] = type === 'Polygon' ? geometry.polygon.coordinates[0][0] : geometry.multipolygon.coordinates[0][0][0]
       const location = {
@@ -65,6 +70,7 @@ const Fokontany = (props) => {
         latitude,
         zoom: 13
       }
+      setName(name)
       setViewport(location)
       const geojson = {
         type: 'FeatureCollection',
@@ -86,7 +92,14 @@ const Fokontany = (props) => {
           lineWidthScale: 20,
           lineWidthMinPixels: 2,
           getElevation: 1,
-          getFillColor: [235, 47, 150, 127]
+          getFillColor: [235, 47, 150, 127],
+          onHover: ({ x, y }) => {
+            if (x > 0 && y > 0) {
+              setPopupX(x - 40)
+              setPopupY(y - 40)
+              setShowPopup(true)
+            }
+          }
         })
       ])
     }
@@ -102,6 +115,24 @@ const Fokontany = (props) => {
 
   return (
     <div>
+      {
+        showPopup && (
+          <div className="ant-popover ant-popover-placement-top" 
+            style={{ position: 'absolute', left: popupX, top: popupY}}>
+            <div className="ant-popover-content">
+              <div class="ant-popover-arrow">
+              </div>
+                <div className="ant-popover-inner" role="tooltip">
+                <div>
+                  <div className="ant-popover-inner-content">
+                    <div>{name}</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )
+      }
       <DeckGL
         initialViewState={viewport}
         controller

@@ -36,6 +36,10 @@ const MAPBOX_STYLE = process.env.REACT_APP_MAP_STYLE
 const Region = (props) => {
   const { id } = props.match.params
   const { loading, error, data } = useQuery(REGION, { variables: { id } })
+  const [showPopup, setShowPopup] = useState(false)
+  const [name, setName] = useState('')
+  const [popupX, setPopupX] = useState(0)
+  const [popupY, setPopupY] = useState(0)
   const [layers, setLayers] = useState([])
   const [expanded, setExpanded] = useState(false)
   const popoverClass = `popover ${expanded ? 'expand' : 'shrink'}`
@@ -48,12 +52,13 @@ const Region = (props) => {
   })
 
   useEffect(() => {
+    setShowPopup(false)
     setLayers([])
   }, [id])
 
   useEffect(() => {
     if (!loading && !error) {
-      const { geometry } = data.region
+      const { geometry, name } = data.region
       const { type } = geometry
       const [longitude, latitude] = type === 'Polygon' ? geometry.polygon.coordinates[0][0] : geometry.multipolygon.coordinates[0][0][0]
       const location = {
@@ -62,6 +67,7 @@ const Region = (props) => {
         latitude,
         zoom: 6
       }
+      setName(name)
       setViewport(location)
       const geojson = {
         type: 'FeatureCollection',
@@ -83,7 +89,14 @@ const Region = (props) => {
           lineWidthScale: 20,
           lineWidthMinPixels: 2,
           getElevation: 1,
-          getFillColor: [82, 196, 26, 127]
+          getFillColor: [82, 196, 26, 127],
+          onHover: ({ x, y }) => {
+            if (x > 0 && y > 0) {
+              setPopupX(x - 40)
+              setPopupY(y - 40)
+              setShowPopup(true)
+            }
+          }
         })
       ])
     }
@@ -99,6 +112,24 @@ const Region = (props) => {
 
   return (
     <div>
+      {
+        showPopup && (
+          <div className="ant-popover ant-popover-placement-top" 
+            style={{ position: 'absolute', left: popupX, top: popupY}}>
+            <div className="ant-popover-content">
+              <div class="ant-popover-arrow">
+              </div>
+                <div className="ant-popover-inner" role="tooltip">
+                <div>
+                  <div className="ant-popover-inner-content">
+                    <div>{name}</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )
+      }
       <DeckGL
         initialViewState={viewport}
         controller
@@ -113,7 +144,8 @@ const Region = (props) => {
           mapboxApiAccessToken={MAPBOX_ACCESS_TOKEN}
           mapStyle={MAPBOX_STYLE}
           // onViewportChange={value => setViewport(value)}
-        />
+        >
+        </MapGL>
       </DeckGL>
       <Popover {...{ popoverClass, setExpanded }} />
     </div>
